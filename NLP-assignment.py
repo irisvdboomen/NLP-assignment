@@ -87,6 +87,7 @@ def home_page():
                 - **Summarize**: rewrite your text into a shorter version.
                 - **Translate**: translate your text into various languages.
     """)
+    st.markdown("""To view the code and the comments, go to the <a href="https://github.com/irisvdboomen/NLP-assignment">GitHub</a> repository.""", unsafe_allow_html=True)
     st.markdown("")
     st.markdown("""
                 #### Design challenge statement:
@@ -145,7 +146,8 @@ def main():
 
     st.markdown("---")
     st.markdown("")
-    st.markdown("<small>Created by Iris van den Boomen</small>", unsafe_allow_html=True)
+    st.markdown('<small>Created by <a href="https://github.com/irisvdboomen/NLP-assignment">Iris van den Boomen</a></small>', unsafe_allow_html=True)   
+    st.markdown("")
 
 if __name__ == "__main__":
     main()
