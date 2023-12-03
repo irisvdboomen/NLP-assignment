@@ -1,5 +1,5 @@
 # import libraries
-""" The libraries are imported. Streamlit is used to create the web app. LangChain with OpenAI is used for text summarization. Document is used to convert text into a document object. CharacterTextSplitter is used to split the text into smaller segments. Translator is used to translate the text. """
+# The libraries are imported. Streamlit is used to create the web app. LangChain with OpenAI is used for text summarization. Document is used to convert text into a document object. CharacterTextSplitter is used to split the text into smaller segments. Translator is used to translate the text. 
 import streamlit as st
 from langchain import OpenAI
 from langchain.docstore.document import Document
@@ -25,7 +25,7 @@ language_dict = {
 }
 
 # Function to perform text summarization
-""" The function summarize_text() takes the input text and the OpenAI API key as input. The Large Language Model is initialized with OpenAI. The input text is split into smaller segments. This is done to make sure that the text is not too long for the summarization chain. If the text segments are not valid, an error message is shown. The text segments are converted into Document objects. This is done to make sure that the text is in the right format for the summarization chain. If the document list is not valid, an error message is shown. The text summarization chain is set up. The summarization chain is run and the result is returned. """
+# The function summarize_text() takes the input text and the OpenAI API key as input. The Large Language Model is initialized with OpenAI. The input text is split into smaller segments. This is done to make sure that the text is not too long for the summarization chain. If the text segments are not valid, an error message is shown. The text segments are converted into Document objects. This is done to make sure that the text is in the right format for the summarization chain. If the document list is not valid, an error message is shown. The text summarization chain is set up. The summarization chain is run and the result is returned. 
 def summarize_text(input_text, api_key):
     # Initialize the Large Language Model
     model = OpenAI(temperature=0, openai_api_key=api_key)
@@ -60,7 +60,7 @@ def summarize_text(input_text, api_key):
     return summarized_text
 
 # Function to translate text
-""" The function translate_text() takes the input text and the target language as input. The language code for the target language is found. The Translator is initialized with the target language code. The max_length is set to 500, because the Translator can only translate text with a maximum length of 500 characters. The input text is split into smaller segments. This is done to make sure that the text is not too long for the translation. The text segments are translated and combined. The translated text is returned. """	
+# The function translate_text() takes the input text and the target language as input. The language code for the target language is found. The Translator is initialized with the target language code. The max_length is set to 500, because the Translator can only translate text with a maximum length of 500 characters. The input text is split into smaller segments. This is done to make sure that the text is not too long for the translation. The text segments are translated and combined. The translated text is returned. 
 def translate_text(text, target_language_name):
     # Find the language code for the selected language
     target_language_code = [code for code, name in language_dict.items() if name == target_language_name][0] 
@@ -77,7 +77,7 @@ def translate_text(text, target_language_name):
     return translated_text
 
 # Home page function
-""" The function home_page() is used to create the home page. The title and description of the app are shown. The flowchart of the app is shown. """	
+# The function home_page() is used to create the home page. The title and description of the app are shown. The flowchart of the app is shown. 
 def home_page():
     st.title("Welcome to the text summarizer and translator app! 📄🌍")
     st.markdown("")
@@ -99,7 +99,7 @@ def home_page():
     st.markdown("")
     st.markdown("Navigate to the 'Summarizer and translator' page from the sidebar to use the app.")
 
-""" The function nlp_assignment_page() is used to create the page for the NLP assignment. The title of the page is shown. The user can input the text they want to summarize and translate. The user can input their OpenAI API key. The user can choose between summarizing and translating. If the user chooses to summarize, the text is summarized. If the user chooses to translate, the user can choose the language they want to translate to. The text is then translated. """
+# The function nlp_assignment_page() is used to create the page for the NLP assignment. The title of the page is shown. The user can input the text they want to summarize and translate. The user can input their OpenAI API key. The user can choose between summarizing and translating. If the user chooses to summarize, the text is summarized. If the user chooses to translate, the user can choose the language they want to translate to. The text is then translated. 
 def nlp_assignment_page():
     st.header('Text summarizer and translator app 📄🌍')
 
@@ -132,7 +132,7 @@ def nlp_assignment_page():
             st.subheader('Translated text:')
             st.write(translated_text)
 
-""" The function main() is used to create the main app. The navigation sidebar is created. The user can choose between the home page and the NLP assignment page. A footer is added."""	
+# The function main() is used to create the main app. The navigation sidebar is created. The user can choose between the home page and the NLP assignment page. A footer is added. 	
 # Main app
 def main():
     st.sidebar.title("Navigation")
