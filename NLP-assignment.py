@@ -1,11 +1,17 @@
+# import libraries
+""" The libraries are imported. Streamlit is used to create the web app. LangChain with OpenAI is used for text summarization. Document is used to convert text into a document object. CharacterTextSplitter is used to split the text into smaller segments. Translator is used to translate the text. """
 import streamlit as st
-from langchain.llms import OpenAI
+from langchain import OpenAI
 from langchain.docstore.document import Document
 from langchain.text_splitter import CharacterTextSplitter
 from langchain.chains.summarize import load_summarize_chain
-from translate import Translator
+from translate import Translator 
 
-# Language dictionary mapping codes to full names
+
+# The app is created. st.set_page_config() is used to set the page title.
+st.set_page_config(page_title='Text summarizer and translator app 📄🌍', page_icon='🌻')
+
+# Language dictionary mapping codes to full names, instead of using the codes to make it more user-friendly
 language_dict = {
     'en': 'English',
     'es': 'Spanish',
@@ -19,16 +25,17 @@ language_dict = {
 }
 
 # Function to perform text summarization
+""" The function summarize_text() takes the input text and the OpenAI API key as input. The Large Language Model is initialized with OpenAI. The input text is split into smaller segments. This is done to make sure that the text is not too long for the summarization chain. If the text segments are not valid, an error message is shown. The text segments are converted into Document objects. This is done to make sure that the text is in the right format for the summarization chain. If the document list is not valid, an error message is shown. The text summarization chain is set up. The summarization chain is run and the result is returned. """
 def summarize_text(input_text, api_key):
-    # Initialize the Large Language Model with OpenAI
+    # Initialize the Large Language Model
     model = OpenAI(temperature=0, openai_api_key=api_key)
 
-    # Check if input text is empty
+    # Check if input text is valid
     if not input_text.strip():
         st.error("Please enter some text to summarize.")
         return None
 
-    # Split the input text into smaller segments
+    # Split text into smaller segments
     splitter = CharacterTextSplitter()
     text_segments = splitter.split_text(input_text)
 
@@ -53,14 +60,15 @@ def summarize_text(input_text, api_key):
     return summarized_text
 
 # Function to translate text
+""" The function translate_text() takes the input text and the target language as input. The language code for the target language is found. The Translator is initialized with the target language code. The max_length is set to 500, because the Translator can only translate text with a maximum length of 500 characters. The input text is split into smaller segments. This is done to make sure that the text is not too long for the translation. The text segments are translated and combined. The translated text is returned. """	
 def translate_text(text, target_language_name):
     # Find the language code for the selected language
-    target_language_code = [code for code, name in language_dict.items() if name == target_language_name][0]
-    translator = Translator(to_lang=target_language_code)
-    max_length = 500
+    target_language_code = [code for code, name in language_dict.items() if name == target_language_name][0] 
+    translator = Translator(to_lang=target_language_code) 
+    max_length = 500 
 
     # Split text into chunks of max_length
-    text_chunks = [text[i:i+max_length] for i in range(0, len(text), max_length)]
+    text_chunks = [text[i:i+max_length] for i in range(0, len(text), max_length)] 
 
     # Translate each chunk and combine
     translated_chunks = [translator.translate(chunk) for chunk in text_chunks]
@@ -68,32 +76,76 @@ def translate_text(text, target_language_name):
 
     return translated_text
 
-# Streamlit App Configuration
-st.set_page_config(page_title='Text Summarizer and Translator')
-st.header('Text Summarizer and Translator Application')
+# Home page function
+""" The function home_page() is used to create the home page. The title and description of the app are shown. The flowchart of the app is shown. """	
+def home_page():
+    st.title("Welcome to the text summarizer and translator app! 📄🌍")
+    st.markdown("")
+    st.markdown("""
+                
+                This app was created as part of the NLP assignment. This app allows you to summarize and translate text.
+                - **Summarize**: rewrite your text into a shorter version.
+                - **Translate**: translate your text into various languages.
+    """)
+    st.markdown("")
+    st.markdown("""
+                #### Design challenge statement:
+                _"Design an **AI-powered web application** to enable **researchers, students, and professionals** in **multilingual environments** to **quickly summarize and translate documents with high accuracy and efficiency.**"_
+    """)
+    st.markdown("")
+    st.markdown("#### Design process:")
+    image_path = "NLP assignment flowchart.png" 
+    st.image(image_path, caption='Flowchart of the app')
+    st.markdown("")
+    st.markdown("Navigate to the 'Summarizer and translator' page from the sidebar to use the app.")
 
-# User input for text summarization
-user_input = st.text_area("Paste the text you want to summarize and translate:", height=150)
+""" The function nlp_assignment_page() is used to create the page for the NLP assignment. The title of the page is shown. The user can input the text they want to summarize and translate. The user can input their OpenAI API key. The user can choose between summarizing and translating. If the user chooses to summarize, the text is summarized. If the user chooses to translate, the user can choose the language they want to translate to. The text is then translated. """
+def nlp_assignment_page():
+    st.header('Text summarizer and translator app 📄🌍')
 
-# Dropdown for selecting translation language
-language_choice = st.selectbox("Choose a language for translation:", list(language_dict.values()))
+    # User input for text summarization
+    user_input = st.text_area("Paste the text you want to summarize and translate:", height=150)
 
-# Form for user submission
-with st.form('text_process_form'):
+    # Input for OpenAI API key
     api_key = st.text_input('Enter your OpenAI API Key', type='password', help='Your API key should start with "sk-"')
-    submit_button = st.form_submit_button('Process Text')
 
-    # Process the form submission
-    if submit_button and api_key.startswith('sk-'):
-        with st.spinner('Processing...'):
+    # Initialize summarized_text
+    summarized_text = ""
+
+    # Radio buttons for choosing action
+    action = st.radio("Choose an action:", ('Summarize', 'Translate'))
+
+    # Process the selected action
+    if action == 'Summarize' and api_key.startswith('sk-') and user_input:
+        with st.spinner('Summarizing...'):
             summarized_text = summarize_text(user_input, api_key)
-            if summarized_text:
-                translated_text = translate_text(summarized_text, language_choice)
-                del api_key
+            st.subheader('Summarized text:')
+            st.write(summarized_text)
 
-# Display the results
-if 'translated_text' in locals():
-    st.subheader('Summarized Text:')
-    st.write(summarized_text)
-    st.subheader('Translated Text:')
-    st.write(translated_text)
+    elif action == 'Translate' and api_key.startswith('sk-') and user_input:
+        # Dropdown for selecting translation language
+        language_choice = st.selectbox("Choose a language for translation:", list(language_dict.values()))
+        with st.spinner('Translating...'):
+            # Translate the summarized text if available; otherwise, translate the original input
+            text_to_translate = summarized_text if summarized_text else user_input
+            translated_text = translate_text(text_to_translate, language_choice)
+            st.subheader('Translated text:')
+            st.write(translated_text)
+
+""" The function main() is used to create the main app. The navigation sidebar is created. The user can choose between the home page and the NLP assignment page. A footer is added."""	
+# Main app
+def main():
+    st.sidebar.title("Navigation")
+    page = st.sidebar.radio("Go to:", ["About", "Summarizer and translator"])
+
+    if page == "About":
+        home_page()
+    elif page == "Summarizer and translator":
+        nlp_assignment_page()
+
+    st.markdown("---")
+    st.markdown("")
+    st.markdown("<small>Created by Iris van den Boomen</small>", unsafe_allow_html=True)
+
+if __name__ == "__main__":
+    main()
