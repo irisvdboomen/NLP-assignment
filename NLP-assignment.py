@@ -86,8 +86,8 @@ def home_page():
                 This app was created as part of the NLP assignment. This app allows you to summarize and translate text.
                 - **Summarize**: rewrite your text into a shorter version.
                 - **Translate**: translate your text into various languages.
-                In order to use the app, you need to have an OpenAI API key. You can get one [here](https://beta.openai.com/).
-    """)
+                """)
+    st.markdown("""In order to use the app, you need to have an OpenAI API key. You can get one <a href="https://beta.openai.com/">here.</a>""", unsafe_allow_html=True)
     st.markdown("""To view the code and the comments, go to the <a href="https://github.com/irisvdboomen/NLP-assignment">GitHub</a> repository.""", unsafe_allow_html=True)
     st.markdown("")
     st.markdown("""
