@@ -60,17 +60,18 @@ def summarize_text(input_text, api_key):
     return summarized_text
 
 # Function to translate text
-# The function translate_text() takes the input text and the target language as input. The language code for the target language is found. The Translator is initialized with the target language code. The max_length is set to 500, because the Translator can only translate text with a maximum length of 500 characters. The input text is split into smaller segments. This is done to make sure that the text is not too long for the translation. The text segments are translated and combined. The translated text is returned. 
-def translate_text(text, target_language_name):
+# The function translate_text() takes the input text, the source language and the target language as input. Before the user could only input the target language, but then it would only translate if the input was English, now the user can also type in another language. The language code for the languages is found. The Translator is initialized with the target language code. The max_length is set to 500, because the Translator can only translate text with a maximum length of 500 characters. The input text is split into smaller segments. This is done to make sure that the text is not too long for the translation. The text segments are translated and combined. The translated text is returned. 
+def translate_text(text, source_language_name, target_language_name):
     # Find the language code for the selected language
-    target_language_code = [code for code, name in language_dict.items() if name == target_language_name][0] 
-    translator = Translator(to_lang=target_language_code) 
+    source_language_code = [code for code, name in language_dict.items() if name == source_language_name][0] # the language of the input text
+    target_language_code = [code for code, name in language_dict.items() if name == target_language_name][0] # language of the output text
+    translator = Translator(from_lang=source_language_code, to_lang=target_language_code) 
     max_length = 500 
 
-    # Split text into chunks of max_length
+    # Text is split into chunks of max_length, so that the text is not too long for the translation. 
     text_chunks = [text[i:i+max_length] for i in range(0, len(text), max_length)] 
 
-    # Translate each chunk and combine
+    # Each chunk is translated  and combined
     translated_chunks = [translator.translate(chunk) for chunk in text_chunks]
     translated_text = ' '.join(translated_chunks)
 
@@ -117,20 +118,20 @@ def nlp_assignment_page():
     # Radio buttons for choosing action
     action = st.radio("Choose an action:", ('Summarize', 'Translate'))
 
-    # Process the selected action
+    # # Process the selected action
     if action == 'Summarize' and api_key.startswith('sk-') and user_input:
         with st.spinner('Summarizing...'):
             summarized_text = summarize_text(user_input, api_key)
             st.subheader('Summarized text:')
             st.write(summarized_text)
-
     elif action == 'Translate' and api_key.startswith('sk-') and user_input:
         # Dropdown for selecting translation language
-        language_choice = st.selectbox("Choose a language for translation:", list(language_dict.values()))
+        source_language_choice = st.selectbox("Translate from:", list(language_dict.values()))
+        target_language_choice = st.selectbox("Translate to:", list(language_dict.values()))
         with st.spinner('Translating...'):
             # Translate the summarized text if available; otherwise, translate the original input
             text_to_translate = summarized_text if summarized_text else user_input
-            translated_text = translate_text(text_to_translate, language_choice)
+            translated_text = translate_text(text_to_translate, source_language_choice, target_language_choice)
             st.subheader('Translated text:')
             st.write(translated_text)
 
